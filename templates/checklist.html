@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ checklist.titulo }}</title>
+    <author>Josué Romero</author>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 50px;
+        }
+        .checklist-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 900px;
+            margin: 30px auto;
+        }
+        .question-card {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .question-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+        .question-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .checkbox-option {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .checkbox-option:hover {
+            background: white;
+        }
+        .checkbox-option input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .checkbox-option.checked-ok {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        .checkbox-option.checked-na {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            padding: 15px 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+        .progress-bar-custom {
+            height: 17px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .info-badge {
+            background: #e7f3ff;
+            border: 2px solid #2196F3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center mt-4 mb-3">
+            <a href="{{ url_for('index') }}" class="text-white text-decoration-none fw-bold">
+                <i class="bi bi-arrow-left-circle"></i> Volver al Inicio
+            </a>
+        </div>
+
+        <div class="checklist-container">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 class="fw-bold text-primary">{{ checklist.titulo }}</h1>
+                <p class="text-muted">Complete todas las verificaciones del checklist</p>
+            </div>
+
+            <!-- Info del usuario -->
+            <div class="info-badge">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <strong><i class="bi bi-hash text-primary"></i> Activo:</strong>
+                        <br>{{ session.activo_fijo }}
+                    </div>
+                    <div class="col-md-4">
+                        <strong><i class="bi bi-person text-primary"></i> Propietario:</strong>
+                        <br>{{ session.propietario }}
+                    </div>
+                    <div class="col-md-4">
+                        <strong><i class="bi bi-briefcase text-primary"></i> Cargo:</strong>
+                        <br>{{ session.cargo }}
+                    </div>
+                    <div class="col-md-4">
+                        <strong><i class="bi bi-briefcase text-primary"></i> Técnico:</strong>
+                        <br>{{ session.tecnico }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra de progreso -->
+            <div class="mb-4">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-custom bg-success" 
+                        role="progressbar" 
+                        id="progressBar"
+                        style="width: 0%">
+                        0%
+                    </div>
+                </div>
+                <p class="text-center mt-2 text-muted small" id="progressText">0 de {{ preguntas|list|length }} preguntas completadas</p>
+            </div>
+
+            <!-- Formulario del checklist -->
+            <form method="POST" id="checklistForm">
+                {% for num, pregunta in preguntas %}
+                <div class="question-card" data-question="{{ num }}">
+                    <div class="d-flex align-items-start">
+                        <div class="question-number">{{ num }}</div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-3">{{ pregunta }}</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                <label class="checkbox-option" data-type="ok">
+                                    <input type="checkbox" 
+                                           name="pregunta_{{ num }}" 
+                                           value="OK"
+                                           onchange="handleCheckbox(this, {{ num }})">
+                                    <span class="fw-bold text-success">OK</span>
+                                </label>
+                                <label class="checkbox-option" data-type="na">
+                                    <input type="checkbox" 
+                                           name="pregunta_{{ num }}" 
+                                           value="N/A"
+                                           onchange="handleCheckbox(this, {{ num }})">
+                                    <span class="fw-bold text-warning">N/A</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-success btn-lg btn-submit" id="submitBtn" disabled>
+                        <i class="bi bi-download"></i> Descargar y Mover Resultado
+                    </button>
+                    <p class="text-muted small mt-3">
+                        <i class="bi bi-info-circle"></i> Debe completar todos los items obligatoriamente!
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const totalPreguntas = {{ preguntas|list|length }};
+        let preguntasCompletadas = new Set();
+
+        function handleCheckbox(checkbox, questionNum) {
+            const card = document.querySelector(`[data-question="${questionNum}"]`);
+            const checkboxes = card.querySelectorAll('input[type="checkbox"]');
+            const labels = card.querySelectorAll('.checkbox-option');
+            
+            // Desmarcar el otro checkbox
+            checkboxes.forEach(cb => {
+                if (cb !== checkbox) {
+                    cb.checked = false;
+                }
+            });
+
+            // Actualizar estilos
+            labels.forEach(label => {
+                label.classList.remove('checked-ok', 'checked-na');
+            });
+
+            if (checkbox.checked) {
+                const label = checkbox.closest('.checkbox-option');
+                const type = label.getAttribute('data-type');
+                label.classList.add(type === 'ok' ? 'checked-ok' : 'checked-na');
+                preguntasCompletadas.add(questionNum);
+            } else {
+                preguntasCompletadas.delete(questionNum);
+            }
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const completadas = preguntasCompletadas.size;
+            const porcentaje = Math.round((completadas / totalPreguntas) * 100);
+            
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            progressBar.style.width = porcentaje + '%';
+            progressBar.textContent = porcentaje + '%';
+            progressText.textContent = `${completadas} de ${totalPreguntas} preguntas completadas`;
+            
+            // Habilitar botón si todas están completadas
+            if (completadas === totalPreguntas) {
+                submitBtn.disabled = false;
+                submitBtn.classList.add('pulse');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.remove('pulse');
+            }
+        }
+
+        // Validación antes de enviar
+        document.getElementById('checklistForm').addEventListener('submit', function(e) {
+            if (preguntasCompletadas.size !== totalPreguntas) {
+                e.preventDefault();
+                alert('Por favor, completa todas las preguntas antes de continuar.');
+            }
+        });
+    </script>
+</body>
+</html>

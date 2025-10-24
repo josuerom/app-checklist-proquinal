@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ checklist.titulo }} - Datos Iniciales</title>
+    <author>Josué Romero</author>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 600px;
+            margin: 50px auto;
+        }
+        .form-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #333;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 40px;
+            font-weight: 600;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center mt-4 mb-3">
+            <a href="{{ url_for('index') }}" class="back-link">
+                <i class="bi bi-arrow-left-circle"></i> Volver al Inicio
+            </a>
+        </div>
+
+        <div class="form-container">
+            <div class="text-center">
+                <div class="form-icon">📝</div>
+                <h2 class="fw-bold text-primary mb-2">{{ checklist.titulo }}</h2>
+                <p class="text-muted mb-4">Por favor, completa los siguientes datos antes de continuar</p>
+            </div>
+
+            <form method="POST" id="datosForm">
+                <div class="mb-4">
+                    <label for="activo_fijo" class="form-label">
+                        <i class="bi bi-hash text-primary"></i> Número del Activo Fijo
+                    </label>
+                    <input type="text" 
+                           class="form-control form-control-lg" 
+                           id="activo_fijo" 
+                           name="activo_fijo" 
+                           placeholder="Ej: 35990" 
+                           required>
+                    <div class="form-text">Ingresa el número de placa del equipo</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="propietario" class="form-label">
+                        <i class="bi bi-person text-primary"></i> Propietario del Dispositivo
+                    </label>
+                    <input type="text" 
+                           class="form-control form-control-lg" 
+                           id="propietario" 
+                           name="propietario" 
+                           placeholder="Ej: Fulano de Tal" 
+                           required>
+                    <div class="form-text">Nombre y apellido del usuario asignado</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="cargo" class="form-label">
+                        <i class="bi bi-briefcase text-primary"></i> Cargo del Propietario
+                    </label>
+                    <input type="text" 
+                           class="form-control form-control-lg" 
+                           id="cargo" 
+                           name="cargo" 
+                           placeholder="Ej: Analista de TI" 
+                           required>
+                    <div class="form-text">Cargo del usuario según su ingreso</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="tecnico" class="form-label">
+                        <i class="bi bi-briefcase text-primary"></i> Técnico Responsable
+                    </label>
+                    <input type="text" 
+                           class="form-control form-control-lg" 
+                           id="tecnico" 
+                           name="tecnico" 
+                           placeholder="Ej: Fulano de Tal" 
+                           required>
+                    <div class="form-text">Nombre y apellido de quien prepara el equipo</div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg btn-submit">
+                        <i class="bi bi-check-circle"></i> Siguiente
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-center mt-4">
+                <small class="text-muted">
+                    <i class="bi bi-shield-check"></i> Los datos están protegidos y solo se usan para el presente checklist
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
