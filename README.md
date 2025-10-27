@@ -16,8 +16,8 @@ Aplicación web desarrollada en Flask como principal checklists de alistamiento 
 ### 1. Clonar o descargar el proyecto
 
 ```bash
-git clone <tu-repositorio>
-cd app-checklist-pqn
+git clone https://github.com/josuerom/app-checklist-proquinal.git
+cd app-checklist-proquinal
 ```
 
 ### 2. Crear entorno virtual (recomendado)
@@ -68,7 +68,7 @@ app-checklist_pqn/
 ├── static/
 │   └── img/
 │       ├── stefanini.png      # Logo Stefanini
-│       └── proquinal.png       # Logo Proquina
+│       └── proquinal.png       # Logo Proquinal
 ├── templates/
 │   ├── index.html             # Página principal
 │   ├── checklist_form.html    # Formulario de datos
