@@ -1,0 +1,44 @@
+# Workflow para desplegar contenido estático en GitHub Pages
+name: App-checklist-pqn
+
+on:
+  # Se ejecuta en push a la rama principal
+  push:
+    branches: ["main"]
+
+  # Permite ejecutar manualmente desde la pestaña Actions
+  workflow_dispatch:
+
+# Permisos necesarios para desplegar en GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Solo un despliegue concurrente
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir artefacto (carpeta templates)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Se sube solo la carpeta donde está el index.html
+          path: 'templates'
+
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
