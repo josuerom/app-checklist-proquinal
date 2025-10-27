@@ -11,6 +11,14 @@ Aplicación web desarrollada en Flask como principal checklists de alistamiento 
 - 📝 Validación de formularios en tiempo real
 - 📈 Barra de progreso para seguimiento
 
+## 💄 Apariencia de la herramienta
+
+![Captura de pantalla: home ](/static/preview_1.png)
+
+![Captura de pantalla: datos ](/static/preview_2.png)
+
+![Captura de pantalla: formulario ](/static/preview_3.png)
+
 ## 📦 Instalación
 
 ### 1. Clonar o descargar el proyecto
